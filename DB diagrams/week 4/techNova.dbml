@@ -1,0 +1,24 @@
+Table Project {
+    ProjectID int [pk]
+    ProjectName varchar
+    ClientID int [ref: > Client.ClientID]
+
+}
+
+Table Employees {
+    EmpID int [pk]
+    EmpName varchar
+    EmpRole varchar
+}
+
+Table Client {
+    ClientID int [pk]
+    ClientName varchar
+    ClientLocation varchar
+}
+
+Table Project_assignments {
+    ProjectID int [ref: > Project.ProjectID]
+    EmpID int [ref: > Employees.EmpID]
+
+}

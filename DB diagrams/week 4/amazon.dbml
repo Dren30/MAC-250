@@ -1,0 +1,35 @@
+Table Order {
+
+    OrderID int [pk]
+    OrderDate date
+    CustomerID int [ref: > Customer.CustomerID]
+    CourierID int [ref: > Courier.CourierID]
+}
+
+Table Customer {
+
+    CustomerID int [pk]
+    CustomerName varchar
+    CustomerEmail varchar
+}
+
+Table Courier {
+
+    CourierID int [pk]
+    CourierName varchar
+    CourierPhone varchar
+}
+
+Table Item {
+
+    ItemID int [pk]
+    ItemName varchar
+}
+
+Table Order_items {
+
+    OrderID int [ref: > Order.OrderID]
+    ItemID int [ref: > Item.ItemID]
+    Quantity int
+
+}
