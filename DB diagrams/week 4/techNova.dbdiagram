@@ -1,0 +1,101 @@
+{
+  "version": "3.0.0",
+  "darkMode": true,
+  "gridEnabling": false,
+  "currentViewName": null,
+  "defaultView": {
+    "detailLevel": "All",
+    "relationshipMode": "All",
+    "tablePositions": [
+      {
+        "name": "Project",
+        "schemaName": "public",
+        "x": 9.752906256841058,
+        "y": -248.90814382148918
+      },
+      {
+        "name": "Employees",
+        "schemaName": "public",
+        "x": 6.3804992110515855,
+        "y": 131.88615001526654
+      },
+      {
+        "name": "Client",
+        "schemaName": "public",
+        "x": -1.621503973054935,
+        "y": -78.3993574483656
+      },
+      {
+        "name": "Project_assignments",
+        "schemaName": "public",
+        "x": 923.23974609375,
+        "y": 12
+      }
+    ],
+    "tableGroupCollapseStates": [],
+    "stickyNoteLayouts": [],
+    "referencePaths": [
+      {
+        "firstFieldNames": [
+          "ProjectID"
+        ],
+        "firstTableName": "Project",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "ProjectID"
+        ],
+        "secondTableName": "Project_assignments",
+        "secondSchemaName": "public",
+        "secondRelation": "*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "EmpID"
+        ],
+        "firstTableName": "Employees",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "EmpID"
+        ],
+        "secondTableName": "Project_assignments",
+        "secondSchemaName": "public",
+        "secondRelation": "*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "ClientID"
+        ],
+        "firstTableName": "Client",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "ClientID"
+        ],
+        "secondTableName": "Project_assignments",
+        "secondSchemaName": "public",
+        "secondRelation": "*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "ClientID"
+        ],
+        "firstTableName": "Client",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "ClientID"
+        ],
+        "secondTableName": "Project",
+        "secondSchemaName": "public",
+        "secondRelation": "*",
+        "checkPoints": []
+      }
+    ]
+  },
+  "views": {}
+}

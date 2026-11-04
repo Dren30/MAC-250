@@ -1,0 +1,107 @@
+{
+  "version": "3.0.0",
+  "darkMode": true,
+  "gridEnabling": false,
+  "currentViewName": null,
+  "defaultView": {
+    "detailLevel": "All",
+    "relationshipMode": "All",
+    "tablePositions": [
+      {
+        "name": "Order",
+        "schemaName": "public",
+        "x": 560.4059660956656,
+        "y": 1.970587681972404
+      },
+      {
+        "name": "Customer",
+        "schemaName": "public",
+        "x": 12,
+        "y": 12
+      },
+      {
+        "name": "Courier",
+        "schemaName": "public",
+        "x": 12,
+        "y": 186
+      },
+      {
+        "name": "Item",
+        "schemaName": "public",
+        "x": 12,
+        "y": 360
+      },
+      {
+        "name": "Order_items",
+        "schemaName": "public",
+        "x": 965.4762589275942,
+        "y": 200.55295157891862
+      }
+    ],
+    "tableGroupCollapseStates": [],
+    "stickyNoteLayouts": [],
+    "referencePaths": [
+      {
+        "firstFieldNames": [
+          "CustomerID"
+        ],
+        "firstTableName": "Customer",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "CustomerID"
+        ],
+        "secondTableName": "Order",
+        "secondSchemaName": "public",
+        "secondRelation": "*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "CourierID"
+        ],
+        "firstTableName": "Courier",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "CourierID"
+        ],
+        "secondTableName": "Order",
+        "secondSchemaName": "public",
+        "secondRelation": "*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "OrderID"
+        ],
+        "firstTableName": "Order",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "OrderID"
+        ],
+        "secondTableName": "Order_items",
+        "secondSchemaName": "public",
+        "secondRelation": "*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "ItemID"
+        ],
+        "firstTableName": "Item",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "ItemID"
+        ],
+        "secondTableName": "Order_items",
+        "secondSchemaName": "public",
+        "secondRelation": "*",
+        "checkPoints": []
+      }
+    ]
+  },
+  "views": {}
+}
