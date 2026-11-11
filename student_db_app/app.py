@@ -11,7 +11,7 @@ def get_connection():
         host="localhost",
         user="root",
         password="...",
-        database="ClassesDB"
+        database="classesDB"
     )
 
 
