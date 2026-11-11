@@ -10,8 +10,8 @@ app = Flask(__name__)
 def get_connection():
     return mysql.connector.connect(
         host="localhost",
-        user="root",
-        password="...",
+        user="your_mysql_username",
+        password="your_mysql_password",
         database="classesDB"
     )
 
