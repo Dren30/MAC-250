@@ -4,59 +4,219 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Student</title>
+
+    <title>ClassesDB | Edit Student</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f1f5f9;
+            color: #1e293b;
+            margin: 0;
+        }
+
+        header {
+            background-color: #1e293b;
+            color: white;
+            padding: 25px 40px;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        header p {
+            color: #cbd5e1;
+            margin-bottom: 0;
+        }
+
+        main {
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        section {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        h2 {
+            margin-top: 0;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        input {
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        input[readonly] {
+            background-color: #f1f5f9;
+            color: #64748b;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        button, .cancel-button {
+            padding: 11px 18px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .save-button {
+            background-color: #2563eb;
+            color: white;
+        }
+
+        .save-button:hover {
+            background-color: #1d4ed8;
+        }
+
+        .cancel-button {
+            background-color: #e2e8f0;
+            color: #334155;
+        }
+
+        .cancel-button:hover {
+            background-color: #cbd5e1;
+        }
+    </style>
 </head>
+
 <body>
 
-    <h1>Update Student Information</h1>
+<header>
+    <h1>ClassesDB</h1>
+    <p>Student Management System</p>
+</header>
 
-    <form action="{{ url_for('update_student') }}" method="POST">
+<main>
 
-        <label for="student_id">Student ID:</label>
-        <input
-            type="number"
-            id="student_id"
-            name="student_id"
-            value="{{ student.student_id }}"
-            readonly
+    <section>
+
+        <h2>Edit Student Information</h2>
+
+        <p>
+            Update the information for student
+            <strong>{{ student.student_id }}</strong>.
+        </p>
+
+        <form
+            action="{{ url_for('update_student') }}"
+            method="POST"
         >
-        <br><br>
 
-        <label for="student_name">First Name:</label>
-        <input
-            type="text"
-            id="student_name"
-            name="student_name"
-            value="{{ student.student_name }}"
-            required
-        >
-        <br><br>
+            <div class="form-group">
 
-        <label for="last_name">Last Name:</label>
-        <input
-            type="text"
-            id="last_name"
-            name="last_name"
-            value="{{ student.last_name }}"
-            required
-        >
-        <br><br>
+                <label for="student_id">Student ID</label>
 
-        <label for="email">Email:</label>
-        <input
-            type="email"
-            id="email"
-            name="email"
-            value="{{ student.email }}"
-            required
-        >
-        <br><br>
+                <input
+                    type="number"
+                    id="student_id"
+                    name="student_id"
+                    value="{{ student.student_id }}"
+                    readonly
+                >
 
-        <button type="submit">Save Changes</button>
+            </div>
 
-        <a href="{{ url_for('index') }}">Cancel</a>
+            <div class="form-group">
 
-    </form>
+                <label for="student_name">First Name</label>
+
+                <input
+                    type="text"
+                    id="student_name"
+                    name="student_name"
+                    value="{{ student.student_name }}"
+                    maxlength="20"
+                    required
+                >
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="last_name">Last Name</label>
+
+                <input
+                    type="text"
+                    id="last_name"
+                    name="last_name"
+                    value="{{ student.last_name }}"
+                    maxlength="20"
+                    required
+                >
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="email">Email</label>
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value="{{ student.email }}"
+                    maxlength="50"
+                    required
+                >
+
+            </div>
+
+            <div class="buttons">
+
+                <button type="submit" class="save-button">
+                    Save Changes
+                </button>
+
+                <a
+                    href="{{ url_for('index') }}"
+                    class="cancel-button"
+                >
+                    Cancel
+                </a>
+
+            </div>
+
+        </form>
+
+    </section>
+
+</main>
 
 </body>
 </html>
