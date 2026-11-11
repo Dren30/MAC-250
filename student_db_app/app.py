@@ -175,6 +175,193 @@ def delete_student():
 
     return redirect("/")
 
+#----------------------------------------------------------
+
+# Display all courses
+@app.route("/courses")
+def courses():
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    sql = "SELECT * FROM courses"
+    cursor.execute(sql)
+
+    courses = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return render_template("courses.html", courses=courses)
+
+
+
+# Add a new course to the database
+@app.route("/insert_course", methods=["POST"])
+def insert_course():
+    course_id = request.form["course_id"]
+    course_name = request.form["course_name"]
+    credits = request.form["credits"]
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    # Check whether the course ID or name already exists
+    check_sql = """
+        SELECT course_id, course_name
+        FROM courses
+        WHERE course_id = %s OR course_name = %s
+    """
+    cursor.execute(check_sql, (course_id, course_name))
+    existing_course = cursor.fetchone()
+
+    if existing_course:
+        cursor.close()
+        conn.close()
+
+        return """
+            <script>
+                alert("Unable to add course!\\n\\nThe Course ID or course name already exists.");
+                window.location.href = "/courses";
+            </script>
+        """
+
+    sql = """
+        INSERT INTO courses (course_id, course_name, credits)
+        VALUES (%s, %s, %s)
+    """
+
+    try:
+        cursor.execute(sql, (course_id, course_name, credits))
+        conn.commit()
+
+    except IntegrityError:
+        conn.rollback()
+        cursor.close()
+        conn.close()
+
+        return """
+            <script>
+                alert("The course could not be added. Please check your information.");
+                window.location.href = "/courses";
+            </script>
+        """
+
+    cursor.close()
+    conn.close()
+
+    return redirect(url_for("courses"))
+
+
+# Display the edit course page
+@app.route("/edit_course/<int:course_id>")
+def edit_course(course_id):
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    sql = "SELECT * FROM courses WHERE course_id = %s"
+    cursor.execute(sql, (course_id,))
+    course = cursor.fetchone()
+
+    cursor.close()
+    conn.close()
+
+    if course is None:
+        return redirect(url_for("courses"))
+
+    return render_template("edit_course.html", course=course)
+
+
+# Update an existing course
+@app.route("/update_course", methods=["POST"])
+def update_course():
+    course_id = request.form["course_id"]
+    course_name = request.form["course_name"]
+    credits = request.form["credits"]
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    # Check whether another course already uses this name
+    check_sql = """
+        SELECT course_id
+        FROM courses
+        WHERE course_name = %s AND course_id != %s
+    """
+    cursor.execute(check_sql, (course_name, course_id))
+    existing_course = cursor.fetchone()
+
+    if existing_course:
+        cursor.close()
+        conn.close()
+
+        return f"""
+            <script>
+                alert("This course name is already being used by another course.");
+                window.location.href = "/edit_course/{course_id}";
+            </script>
+        """
+
+    sql = """
+        UPDATE courses
+        SET course_name = %s, credits = %s
+        WHERE course_id = %s
+    """
+
+    try:
+        cursor.execute(sql, (course_name, credits, course_id))
+        conn.commit()
+
+    except IntegrityError:
+        conn.rollback()
+        cursor.close()
+        conn.close()
+
+        return """
+            <script>
+                alert("The course could not be updated.");
+                window.location.href = "/courses";
+            </script>
+        """
+
+    cursor.close()
+    conn.close()
+
+    return redirect(url_for("courses"))
+
+
+# Delete a course
+@app.route("/delete_course", methods=["POST"])
+def delete_course():
+    course_id = request.form["course_id"]
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    sql = "DELETE FROM courses WHERE course_id = %s"
+
+    try:
+        cursor.execute(sql, (course_id,))
+        conn.commit()
+
+    except IntegrityError:
+        conn.rollback()
+        cursor.close()
+        conn.close()
+
+        return f"""
+            <script>
+                alert("This course cannot be deleted because students are enrolled in it.");
+                window.location.href = "/courses";
+            </script>
+        """
+
+    cursor.close()
+    conn.close()
+
+    return redirect(url_for("courses"))
+
+
+
 
 # Run the Flask development server
 if __name__ == "__main__":
