@@ -19,21 +19,64 @@
             color: #1e293b;
         }
 
-        header {
+        /* HEADER */
+        .main-header {
             background-color: #1e293b;
             color: white;
             padding: 25px 40px;
         }
 
-        header h1 {
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header-title h1 {
             margin: 0;
+            font-size: 30px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
         }
 
-        header p {
+        .header-title p {
             color: #cbd5e1;
-            margin-bottom: 0;
+            margin: 6px 0 0;
+            font-size: 14px;
         }
 
+        /* NAVIGATION */
+        .main-nav {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .main-nav a {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            padding: 10px 18px;
+            border-radius: 8px;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .main-nav a:hover {
+            background-color: #334155;
+            color: white;
+        }
+
+        .main-nav a.active {
+            background-color: #2563eb;
+            color: white;
+        }
+
+        /* MAIN CONTENT */
         main {
             max-width: 1200px;
             margin: 30px auto;
@@ -53,6 +96,7 @@
             color: #1e293b;
         }
 
+        /* FORM */
         .form-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -80,8 +124,10 @@
         input:focus {
             outline: none;
             border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
         }
 
+        /* BUTTONS */
         button {
             border: none;
             padding: 10px 16px;
@@ -89,6 +135,7 @@
             cursor: pointer;
             font-size: 14px;
             font-weight: bold;
+            transition: background-color 0.2s ease;
         }
 
         .primary-button {
@@ -123,6 +170,7 @@
             background-color: #fecaca;
         }
 
+        /* TABLE */
         .table-container {
             overflow-x: auto;
         }
@@ -148,6 +196,7 @@
             background-color: #f8fafc;
         }
 
+        /* STUDENT STATUS */
         .status {
             display: inline-block;
             padding: 5px 10px;
@@ -156,16 +205,17 @@
             font-weight: bold;
         }
 
-        .active {
+        .status.active {
             background-color: #dcfce7;
             color: #166534;
         }
 
-        .inactive {
+        .status.inactive {
             background-color: #fee2e2;
             color: #991b1b;
         }
 
+        /* ACTIONS */
         .actions {
             display: flex;
             gap: 8px;
@@ -182,9 +232,24 @@
             padding: 25px;
         }
 
+        /* RESPONSIVE DESIGN */
         @media (max-width: 600px) {
-            header {
+            .main-header {
                 padding: 20px;
+            }
+
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .main-nav {
+                width: 100%;
+                gap: 5px;
+            }
+
+            .main-nav a {
+                padding: 9px 12px;
             }
 
             .form-grid {
@@ -194,188 +259,228 @@
             section {
                 padding: 18px;
             }
+
+            main {
+                margin: 20px auto;
+            }
         }
     </style>
 </head>
 
 <body>
 
-<header>
-    <h1>ClassesDB</h1>
-    <p>Student Management System</p>
-</header>
+    <!-- HEADER -->
+    <header class="main-header">
 
-<main>
+        <div class="header-content">
 
-    <!-- ADD STUDENT -->
-    <section>
-        <h2>Add New Student</h2>
-
-        <form action="{{ url_for('insert_student') }}" method="POST">
-
-            <div class="form-grid">
-
-                <div class="form-group">
-                    <label for="student_id">Student ID</label>
-                    <input
-                        type="number"
-                        id="student_id"
-                        name="student_id"
-                        required
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label for="student_name">First Name</label>
-                    <input
-                        type="text"
-                        id="student_name"
-                        name="student_name"
-                        maxlength="20"
-                        required
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label for="last_name">Last Name</label>
-                    <input
-                        type="text"
-                        id="last_name"
-                        name="last_name"
-                        maxlength="20"
-                        required
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        maxlength="50"
-                        required
-                    >
-                </div>
-
+            <div class="header-title">
+                <h1>ClassesDB</h1>
+                <p>Student Management System</p>
             </div>
 
-            <button type="submit" class="primary-button">
-                Add Student
-            </button>
-
-        </form>
-    </section>
-
-
-    <!-- STUDENT TABLE -->
-    <section>
-        <h2>Students</h2>
-
-        <div class="table-container">
-
-            <table>
-
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Email</th>
-                        <th>Enrolled Since</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-
-                    {% for student in students %}
-
-                    <tr>
-
-                        <td>{{ student.student_id }}</td>
-
-                        <td>{{ student.student_name }}</td>
-
-                        <td>{{ student.last_name }}</td>
-
-                        <td>{{ student.email }}</td>
-
-                        <td>{{ student.enrolled_since }}</td>
-
-                        <td>
-                            {% if student.is_active %}
-                                <span class="status active">
-                                    Active
-                                </span>
-                            {% else %}
-                                <span class="status inactive">
-                                    Inactive
-                                </span>
-                            {% endif %}
-                        </td>
-
-                        <td>
-                            <div class="actions">
-
-                                <a
-                                    class="edit-button"
-                                    href="{{ url_for(
-                                        'edit_student',
-                                        student_id=student.student_id
-                                    ) }}"
-                                >
-                                    Edit
-                                </a>
-
-                                <form
-                                    action="{{ url_for('delete_student') }}"
-                                    method="POST"
-                                    onsubmit="return confirm(
-                                        'Are you sure you want to delete this student?'
-                                    );"
-                                >
-
-                                    <input
-                                        type="hidden"
-                                        name="student_id"
-                                        value="{{ student.student_id }}"
-                                    >
-
-                                    <button
-                                        type="submit"
-                                        class="delete-button"
-                                    >
-                                        Delete
-                                    </button>
-
-                                </form>
-
-                            </div>
-                        </td>
-
-                    </tr>
-
-                    {% else %}
-
-                    <tr>
-                        <td colspan="7" class="empty-message">
-                            No students found.
-                        </td>
-                    </tr>
-
-                    {% endfor %}
-
-                </tbody>
-
-            </table>
+            <nav class="main-nav">
+                <a href="{{ url_for('index') }}" class="active">Students</a>
+                <a href="{{ url_for('courses') }}">Courses</a>
+                <a href="{{ url_for('enrollments') }}">Enrollments</a>
+            </nav>
 
         </div>
 
-    </section>
+    </header>
 
-</main>
+    <main>
+
+        <!-- ADD STUDENT -->
+        <section>
+
+            <h2>Add New Student</h2>
+
+            <form action="{{ url_for('insert_student') }}" method="POST">
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+
+                        <label for="student_id">Student ID</label>
+
+                        <input
+                            type="number"
+                            id="student_id"
+                            name="student_id"
+                            required
+                        >
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="student_name">First Name</label>
+
+                        <input
+                            type="text"
+                            id="student_name"
+                            name="student_name"
+                            maxlength="20"
+                            required
+                        >
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="last_name">Last Name</label>
+
+                        <input
+                            type="text"
+                            id="last_name"
+                            name="last_name"
+                            maxlength="20"
+                            required
+                        >
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="email">Email</label>
+
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            maxlength="50"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+                <button type="submit" class="primary-button">
+                    Add Student
+                </button>
+
+            </form>
+
+        </section>
+
+
+        <!-- STUDENT TABLE -->
+        <section>
+
+            <h2>Students</h2>
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Email</th>
+                            <th>Enrolled Since</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for student in students %}
+
+                        <tr>
+
+                            <td>{{ student.student_id }}</td>
+
+                            <td>{{ student.student_name }}</td>
+
+                            <td>{{ student.last_name }}</td>
+
+                            <td>{{ student.email }}</td>
+
+                            <td>{{ student.enrolled_since }}</td>
+
+                            <td>
+
+                                {% if student.is_active %}
+
+                                    <span class="status active">
+                                        Active
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="status inactive">
+                                        Inactive
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+
+                                <div class="actions">
+
+                                    <a
+                                        class="edit-button"
+                                        href="{{ url_for(
+                                            'edit_student',
+                                            student_id=student.student_id
+                                        ) }}"
+                                    >
+                                        Edit
+                                    </a>
+
+                                    <form
+                                        action="{{ url_for('delete_student') }}"
+                                        method="POST"
+                                        onsubmit="return confirm('Are you sure you want to delete this student?');"
+                                    >
+
+                                        <input
+                                            type="hidden"
+                                            name="student_id"
+                                            value="{{ student.student_id }}"
+                                        >
+
+                                        <button
+                                            type="submit"
+                                            class="delete-button"
+                                        >
+                                            Delete
+                                        </button>
+
+                                    </form>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        {% else %}
+
+                        <tr>
+                            <td colspan="7" class="empty-message">
+                                No students found.
+                            </td>
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
 
 </body>
 </html>
