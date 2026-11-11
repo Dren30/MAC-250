@@ -163,17 +163,33 @@ def delete_student():
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute(
-        "DELETE FROM students WHERE student_id = %s",
-        (student_id,)
-    )
+    try:
+        # Delete the student's enrollments first
+        sql = "DELETE FROM enrollments WHERE student_id = %s"
+        cursor.execute(sql, (student_id,))
 
-    conn.commit()
+        # Then delete the student
+        sql = "DELETE FROM students WHERE student_id = %s"
+        cursor.execute(sql, (student_id,))
+
+        conn.commit()
+
+    except IntegrityError:
+        conn.rollback()
+        cursor.close()
+        conn.close()
+
+        return """
+            <script>
+                alert("The student could not be deleted. Please try again.");
+                window.location.href = "/";
+            </script>
+        """
 
     cursor.close()
     conn.close()
 
-    return redirect("/")
+    return redirect(url_for("index"))
 
 #----------------------------------------------------------
 
@@ -329,7 +345,7 @@ def update_course():
     return redirect(url_for("courses"))
 
 
-# Delete a course
+# Delete a course from the database
 @app.route("/delete_course", methods=["POST"])
 def delete_course():
     course_id = request.form["course_id"]
@@ -337,10 +353,15 @@ def delete_course():
     conn = get_connection()
     cursor = conn.cursor()
 
-    sql = "DELETE FROM courses WHERE course_id = %s"
-
     try:
+        # Delete the course's enrollments first
+        sql = "DELETE FROM enrollments WHERE course_id = %s"
         cursor.execute(sql, (course_id,))
+
+        # Then delete the course
+        sql = "DELETE FROM courses WHERE course_id = %s"
+        cursor.execute(sql, (course_id,))
+
         conn.commit()
 
     except IntegrityError:
@@ -348,9 +369,9 @@ def delete_course():
         cursor.close()
         conn.close()
 
-        return f"""
+        return """
             <script>
-                alert("This course cannot be deleted because students are enrolled in it.");
+                alert("The course could not be deleted. Please try again.");
                 window.location.href = "/courses";
             </script>
         """
