@@ -1,6 +1,7 @@
 
 from flask import Flask, render_template, request, redirect, url_for
 import mysql.connector
+from mysql.connector import IntegrityError
 
 app = Flask(__name__)
 
@@ -41,23 +42,63 @@ def insert_student():
     conn = get_connection()
     cursor = conn.cursor()
 
+    # Check if the student ID or email already exists
+    check_sql = """
+        SELECT student_id, email
+        FROM students
+        WHERE student_id = %s OR email = %s
+    """
+
+    cursor.execute(check_sql, (student_id, email))
+    existing_student = cursor.fetchone()
+
+    # If the ID or email already exists
+    if existing_student:
+        cursor.close()
+        conn.close()
+
+        return """
+            <script>
+                alert("Unable to add student!\\n\\nThe Student ID or email already exists. Please try again.");
+                window.location.href = "/";
+            </script>
+        """
+
+    # Insert the new student
     sql = """
         INSERT INTO students
         (student_id, student_name, last_name, email)
         VALUES (%s, %s, %s, %s)
     """
 
-    cursor.execute(
-        sql,
-        (student_id, student_name, last_name, email)
-    )
+    try:
+        cursor.execute(
+            sql,
+            (student_id, student_name, last_name, email)
+        )
 
-    conn.commit()
+        conn.commit()
+
+    except IntegrityError:
+        conn.rollback()
+
+        cursor.close()
+        conn.close()
+
+        return """
+            <script>
+                alert("Something went wrong!\\n\\nThe student could not be added. Please check your information.");
+                window.location.href = "/";
+            </script>
+        """
 
     cursor.close()
     conn.close()
 
     return redirect("/")
+
+
+
 
 
 # Retrieve a student's information for editing
