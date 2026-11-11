@@ -1,0 +1,333 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ClassesDB | Course Management</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f1f5f9;
+            color: #1e293b;
+        }
+
+        header {
+            background-color: #1e293b;
+            color: white;
+            padding: 25px 40px;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        header p {
+            color: #cbd5e1;
+            margin-bottom: 0;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        section {
+            background-color: white;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #1e293b;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+        input {
+            padding: 11px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 14px;
+            width: 100%;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        button {
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .primary-button {
+            background-color: #2563eb;
+            color: white;
+            margin-top: 20px;
+        }
+
+        .primary-button:hover {
+            background-color: #1d4ed8;
+        }
+
+        .edit-button {
+            background-color: #e0f2fe;
+            color: #0369a1;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            display: inline-block;
+        }
+
+        .edit-button:hover {
+            background-color: #bae6fd;
+        }
+
+        .delete-button {
+            background-color: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .delete-button:hover {
+            background-color: #fecaca;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 650px;
+        }
+
+        th, td {
+            padding: 13px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            background-color: #f8fafc;
+            color: #475569;
+        }
+
+        tr:hover {
+            background-color: #f8fafc;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .actions form {
+            margin: 0;
+        }
+
+        .empty-message {
+            text-align: center;
+            color: #64748b;
+            padding: 25px;
+        }
+
+        @media (max-width: 600px) {
+            header {
+                padding: 20px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            section {
+                padding: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>ClassesDB</h1>
+    <p>Course Management System</p>
+</header>
+
+<main>
+
+    <!-- ADD COURSE -->
+    <section>
+        <h2>Add New Course</h2>
+
+        <form action="{{ url_for('insert_course') }}" method="POST">
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label for="course_id">Course ID</label>
+                    <input
+                        type="number"
+                        id="course_id"
+                        name="course_id"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="course_name">Course Name</label>
+                    <input
+                        type="text"
+                        id="course_name"
+                        name="course_name"
+                        maxlength="60"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="credits">Credits</label>
+                    <input
+                        type="number"
+                        id="credits"
+                        name="credits"
+                        min="1"
+                        required
+                    >
+                </div>
+
+            </div>
+
+            <button type="submit" class="primary-button">
+                Add Course
+            </button>
+
+        </form>
+    </section>
+
+
+    <!-- COURSE TABLE -->
+    <section>
+        <h2>Courses</h2>
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Course Name</th>
+                        <th>Credits</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for course in courses %}
+
+                    <tr>
+
+                        <td>{{ course.course_id }}</td>
+
+                        <td>{{ course.course_name }}</td>
+
+                        <td>{{ course.credits }}</td>
+
+                        <td>
+                            <div class="actions">
+
+                                <a
+                                    class="edit-button"
+                                    href="{{ url_for(
+                                        'edit_course',
+                                        course_id=course.course_id
+                                    ) }}"
+                                >
+                                    Edit
+                                </a>
+
+                                <form
+                                    action="{{ url_for('delete_course') }}"
+                                    method="POST"
+                                    onsubmit="return confirm(
+                                        'Are you sure you want to delete this course?'
+                                    );"
+                                >
+
+                                    <input
+                                        type="hidden"
+                                        name="course_id"
+                                        value="{{ course.course_id }}"
+                                    >
+
+                                    <button
+                                        type="submit"
+                                        class="delete-button"
+                                    >
+                                        Delete
+                                    </button>
+
+                                </form>
+
+                            </div>
+                        </td>
+
+                    </tr>
+
+                    {% else %}
+
+                    <tr>
+                        <td colspan="4" class="empty-message">
+                            No courses found.
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+</main>
+
+</body>
+</html>
