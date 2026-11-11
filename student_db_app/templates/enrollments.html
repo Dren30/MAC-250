@@ -1,0 +1,426 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ClassesDB | Enrollment Management</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f1f5f9;
+            color: #1e293b;
+        }
+
+        /* HEADER */
+        .main-header {
+            background-color: #1e293b;
+            color: white;
+            padding: 25px 40px;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header-title h1 {
+            margin: 0;
+            font-size: 30px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .header-title p {
+            color: #cbd5e1;
+            margin: 6px 0 0;
+            font-size: 14px;
+        }
+
+        /* NAVIGATION */
+        .main-nav {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .main-nav a {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            padding: 10px 18px;
+            border-radius: 8px;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .main-nav a:hover {
+            background-color: #334155;
+            color: white;
+        }
+
+        .main-nav a.active {
+            background-color: #2563eb;
+            color: white;
+        }
+
+        /* MAIN CONTENT */
+        main {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        section {
+            background-color: white;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        h2 {
+            margin-top: 0;
+            margin-bottom: 22px;
+            color: #1e293b;
+            font-size: 21px;
+        }
+
+        /* FORM */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 7px;
+            font-size: 14px;
+        }
+
+        select {
+            padding: 11px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 14px;
+            width: 100%;
+            background-color: white;
+            color: #1e293b;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+        }
+
+        /* BUTTONS */
+        button {
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: background-color 0.2s ease;
+        }
+
+        .primary-button {
+            background-color: #2563eb;
+            color: white;
+            margin-top: 20px;
+        }
+
+        .primary-button:hover {
+            background-color: #1d4ed8;
+        }
+
+        .delete-button {
+            background-color: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .delete-button:hover {
+            background-color: #fecaca;
+        }
+
+        /* TABLE */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 750px;
+        }
+
+        th, td {
+            padding: 13px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: #f8fafc;
+            color: #475569;
+            font-weight: 700;
+        }
+
+        tr:hover {
+            background-color: #f8fafc;
+        }
+
+        td form {
+            margin: 0;
+        }
+
+        .empty-message {
+            text-align: center;
+            color: #64748b;
+            padding: 25px;
+        }
+
+        /* RESPONSIVE DESIGN */
+        @media (max-width: 600px) {
+            .main-header {
+                padding: 20px;
+            }
+
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .main-nav {
+                width: 100%;
+                gap: 5px;
+            }
+
+            .main-nav a {
+                padding: 9px 12px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            section {
+                padding: 18px;
+            }
+
+            main {
+                margin: 20px auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="main-header">
+
+        <div class="header-content">
+
+            <div class="header-title">
+                <h1>ClassesDB</h1>
+                <p>Enrollment Management System</p>
+            </div>
+
+            <nav class="main-nav">
+                <a href="{{ url_for('index') }}">Students</a>
+                <a href="{{ url_for('courses') }}">Courses</a>
+                <a href="{{ url_for('enrollments') }}" class="active">Enrollments</a>
+            </nav>
+
+        </div>
+
+    </header>
+
+    <main>
+
+        <!-- ADD ENROLLMENT -->
+        <section>
+
+            <h2>Enroll Student in a Course</h2>
+
+            <form action="{{ url_for('insert_enrollment') }}" method="POST">
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+
+                        <label for="student_id">Select Student</label>
+
+                        <select id="student_id" name="student_id" required>
+
+                            <option value="" disabled selected>
+                                Choose a student
+                            </option>
+
+                            {% for student in students %}
+
+                            <option value="{{ student.student_id }}">
+                                {{ student.student_id }} -
+                                {{ student.student_name }}
+                                {{ student.last_name }}
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="course_id">Select Course</label>
+
+                        <select id="course_id" name="course_id" required>
+
+                            <option value="" disabled selected>
+                                Choose a course
+                            </option>
+
+                            {% for course in courses %}
+
+                            <option value="{{ course.course_id }}">
+                                {{ course.course_id }} -
+                                {{ course.course_name }}
+                                ({{ course.credits }} credits)
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <button type="submit" class="primary-button">
+                    Enroll Student
+                </button>
+
+            </form>
+
+        </section>
+
+
+        <!-- ENROLLMENT TABLE -->
+        <section>
+
+            <h2>Student Enrollments</h2>
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Student ID</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Course ID</th>
+                            <th>Course Name</th>
+                            <th>Credits</th>
+                            <th>Registered</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for enrollment in enrollments %}
+
+                        <tr>
+
+                            <td>{{ enrollment.student_id }}</td>
+
+                            <td>{{ enrollment.student_name }}</td>
+
+                            <td>{{ enrollment.last_name }}</td>
+
+                            <td>{{ enrollment.course_id }}</td>
+
+                            <td>{{ enrollment.course_name }}</td>
+
+                            <td>{{ enrollment.credits }}</td>
+
+                            <td>{{ enrollment.registered }}</td>
+
+                            <td>
+
+                                <form
+                                    action="{{ url_for('delete_enrollment') }}"
+                                    method="POST"
+                                    onsubmit="return confirm('Are you sure you want to remove this enrollment?');"
+                                >
+
+                                    <input
+                                        type="hidden"
+                                        name="student_id"
+                                        value="{{ enrollment.student_id }}"
+                                    >
+
+                                    <input
+                                        type="hidden"
+                                        name="course_id"
+                                        value="{{ enrollment.course_id }}"
+                                    >
+
+                                    <button
+                                        type="submit"
+                                        class="delete-button"
+                                    >
+                                        Delete
+                                    </button>
+
+                                </form>
+
+                            </td>
+
+                        </tr>
+
+                        {% else %}
+
+                        <tr>
+                            <td colspan="8" class="empty-message">
+                                No enrollments found.
+                            </td>
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</body>
+</html>
