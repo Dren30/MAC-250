@@ -129,3 +129,6 @@ The project uses three tables:
 - **enrollments:** Junction table connecting students and courses through a many-to-many relationship.
 
 The `enrollments` table uses a composite primary key consisting of `student_id` and `course_id` to prevent duplicate student-course enrollments.
+
+
+**Note about deleting records:** When deleting a student or a course, all associated enrollment records are automatically deleted first. This is necessary because the `enrollments` table contains foreign keys referencing the `students` and `courses` tables. Deleting the related enrollments first prevents foreign key constraint errors.
