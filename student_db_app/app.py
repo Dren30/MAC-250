@@ -28,7 +28,7 @@ def index():
     cursor.close()
     conn.close()
 
-    return render_template("index.html", students=students)
+    return render_template("students.html", students=students)
 
 
 # Add a new student to the database
@@ -120,7 +120,7 @@ def edit_student(student_id):
     if student is None:
         return "Student not found", 404
 
-    return render_template("edit.html", student=student)
+    return render_template("edit_student.html", student=student)
 
 
 # Update an existing student's information
