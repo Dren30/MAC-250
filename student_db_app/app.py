@@ -360,6 +360,150 @@ def delete_course():
 
     return redirect(url_for("courses"))
 
+# -------------------------------------------------------
+
+# Display all enrollments
+@app.route("/enrollments")
+def enrollments():
+
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    # Get all students for the dropdown
+    cursor.execute("""
+        SELECT student_id, student_name, last_name
+        FROM students
+        ORDER BY student_id
+    """)
+
+    students = cursor.fetchall()
+
+    # Get all courses for the dropdown
+    cursor.execute("""
+        SELECT course_id, course_name, credits
+        FROM courses
+        ORDER BY course_id
+    """)
+
+    courses = cursor.fetchall()
+
+    # Get all enrollment relationships
+    sql = """
+        SELECT
+            e.student_id,
+            s.student_name,
+            s.last_name,
+            e.course_id,
+            c.course_name,
+            c.credits,
+            e.registered
+        FROM enrollments e
+        INNER JOIN students s
+            ON e.student_id = s.student_id
+        INNER JOIN courses c
+            ON e.course_id = c.course_id
+        ORDER BY e.student_id ASC, e.course_id ASC
+    """
+
+    cursor.execute(sql)
+    enrollments = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return render_template(
+        "enrollments.html",
+        students=students,
+        courses=courses,
+        enrollments=enrollments
+    )
+
+
+# Add a new enrollment
+@app.route("/insert_enrollment", methods=["POST"])
+def insert_enrollment():
+
+    student_id = request.form["student_id"]
+    course_id = request.form["course_id"]
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    # Check whether this student is already enrolled in this course
+    check_sql = """
+        SELECT student_id, course_id
+        FROM enrollments
+        WHERE student_id = %s AND course_id = %s
+    """
+
+    cursor.execute(check_sql, (student_id, course_id))
+    existing_enrollment = cursor.fetchone()
+
+    if existing_enrollment:
+        cursor.close()
+        conn.close()
+
+        return """
+            <script>
+                alert("This student is already enrolled in this course.");
+                window.location.href = "/enrollments";
+            </script>
+        """
+
+    # Insert the enrollment and record the current date and time
+    sql = """
+        INSERT INTO enrollments
+        (student_id, course_id, registered)
+        VALUES (%s, %s, NOW())
+    """
+
+    try:
+        cursor.execute(sql, (student_id, course_id))
+        conn.commit()
+
+    except IntegrityError:
+        conn.rollback()
+
+        cursor.close()
+        conn.close()
+
+        return """
+            <script>
+                alert("The enrollment could not be added. Please check your information.");
+                window.location.href = "/enrollments";
+            </script>
+        """
+
+    cursor.close()
+    conn.close()
+
+    return redirect(url_for("enrollments"))
+
+
+# Delete an enrollment
+@app.route("/delete_enrollment", methods=["POST"])
+def delete_enrollment():
+
+    student_id = request.form["student_id"]
+    course_id = request.form["course_id"]
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    sql = """
+        DELETE FROM enrollments
+        WHERE student_id = %s AND course_id = %s
+    """
+
+    cursor.execute(sql, (student_id, course_id))
+
+    conn.commit()
+
+    cursor.close()
+    conn.close()
+
+    return redirect(url_for("enrollments"))
+
 
 
 
