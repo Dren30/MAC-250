@@ -504,6 +504,59 @@ def delete_enrollment():
 
     return redirect(url_for("enrollments"))
 
+# ______________________________________________________________________________________
+
+# Display all students, courses, and enrollments
+@app.route("/show_all")
+def show_all():
+
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    # Retrieve all students
+    cursor.execute("""
+        SELECT *
+        FROM students
+        ORDER BY student_id
+    """)
+    students = cursor.fetchall()
+
+    # Retrieve all courses
+    cursor.execute("""
+        SELECT *
+        FROM courses
+        ORDER BY course_id
+    """)
+    courses = cursor.fetchall()
+
+    # Retrieve all enrollment relationships
+    cursor.execute("""
+        SELECT
+            e.student_id,
+            s.student_name,
+            s.last_name,
+            e.course_id,
+            c.course_name,
+            c.credits,
+            e.registered
+        FROM enrollments e
+        INNER JOIN students s
+            ON e.student_id = s.student_id
+        INNER JOIN courses c
+            ON e.course_id = c.course_id
+        ORDER BY e.student_id, e.course_id
+    """)
+    enrollments = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return render_template(
+        "show_all.html",
+        students=students,
+        courses=courses,
+        enrollments=enrollments
+    )
 
 
 
